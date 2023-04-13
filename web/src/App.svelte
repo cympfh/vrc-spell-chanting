@@ -4,6 +4,8 @@
   import { globe, caretRight } from "svelte-awesome/icons";
   import Footer from "./components/Footer.svelte";
 
+  let status = 200;
+
   let spell = "";
   function post_spell() {
     fetch('/api/spell', {
@@ -12,6 +14,11 @@
         "Content-Type": "application/json",
       },
       body: JSON.stringify({"text": spell})
+    }).then(res => res.json()).then(data => {
+      status = data.status;
+      if (status == 200) {
+        spell = "";
+      }
     });
   }
 
@@ -52,7 +59,6 @@
 
   onMount(() => {
     get_spell_table();
-    recognition.start();
   });
 </script>
 
@@ -64,8 +70,25 @@
   <div class="container">
     <div class="field has-addons">
       <div class="control">
+        <a class="button is-info" on:click={() => { recognition.start(); }}>
+          Start
+        </a>
+      </div>
+      <div class="control">
+        <a class="button is-info" on:click={() => { recognition.end() }}>
+          End
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="field has-addons">
+      <div class="control">
         <form on:submit|preventDefault={post_spell}>
-          <input class="input" type="text" placeholder="spell here" bind:value={spell}>
+          <input class="input" class:is-info={status == 200} class:is-danger={ status != 200 } type="text" placeholder="spell here" bind:value={spell}>
         </form>
       </div>
       <div class="control">
