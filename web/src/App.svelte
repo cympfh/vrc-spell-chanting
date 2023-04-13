@@ -1,13 +1,17 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Icon from "svelte-awesome";
-  import { globe, caretRight } from "svelte-awesome/icons";
+  import { infoCircle } from "svelte-awesome/icons";
   import Footer from "./components/Footer.svelte";
 
   let status = 200;
+  let listening = false;
+  let message = "Click Start and Speech";
 
   let spell = "";
   function post_spell() {
+    if (spell === "") return;
+    console.log("POST", spell);
     fetch('/api/spell', {
       method: "POST",
       headers: {
@@ -15,9 +19,13 @@
       },
       body: JSON.stringify({"text": spell})
     }).then(res => res.json()).then(data => {
+      console.log(data);
       status = data.status;
       if (status == 200) {
         spell = "";
+        message = `OK: ${data.spell}`;
+      } else {
+        message = "Failed";
       }
     });
   }
@@ -32,20 +40,24 @@
   var SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
   var recognition = new SpeechRecognition();
   recognition.lang = "en-US";
+  // recognition.lang = "ja-JP";
   recognition.interimResults = true;
-  recognition.continuous = true;
+  // recognition.continuous = true;
   recognition.onsoundstart = () => {
     console.log('[I] Listening...')
   };
   recognition.onnomatch = () => {
     console.log('[I] NoMatch (try again)');
+    kick_recognition();
   };
   recognition.onerror = (err) => {
     console.log('[I] Error', err);
+    kick_recognition();
   };
   recognition.onsoundend = () => {
     console.log('[I] End');
     post_spell();
+    kick_recognition();
   };
   recognition.onresult = (event) => {
     for (var i = event.resultIndex; i < event.results.length; i++){
@@ -56,6 +68,23 @@
       }
     }
   };
+  function kick_recognition() {
+    console.log("kick_recognition");
+    if (listening) {
+      recognition.stop();
+    }
+    setTimeout(() => {
+      recognition.start();
+      listening = true;
+    }, 200);
+  }
+  function stop_recognition() {
+    console.log("stop_recognition");
+    if (listening) {
+      recognition.stop();
+    }
+    listening = false;
+  }
 
   onMount(() => {
     get_spell_table();
@@ -70,23 +99,6 @@
   <div class="container">
     <div class="field has-addons">
       <div class="control">
-        <a class="button is-info" on:click={() => { recognition.start(); }}>
-          Start
-        </a>
-      </div>
-      <div class="control">
-        <a class="button is-info" on:click={() => { recognition.end() }}>
-          End
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="container">
-    <div class="field has-addons">
-      <div class="control">
         <form on:submit|preventDefault={post_spell}>
           <input class="input" class:is-info={status == 200} class:is-danger={ status != 200 } type="text" placeholder="spell here" bind:value={spell}>
         </form>
@@ -96,6 +108,26 @@
           Run
         </a>
       </div>
+    </div>
+    <div class="field has-addons">
+      <div class="control">
+        <a class="button is-info" on:click={kick_recognition}>
+          Start
+        </a>
+      </div>
+      <div class="control">
+        <a class="button is-info" on:click={stop_recognition}>
+          End
+        </a>
+      </div>
+    </div>
+    <div class="field">
+      {#if message}
+        <div>
+          <Icon data={infoCircle} />
+          { message }
+        </div>
+      {/if}
     </div>
   </div>
 </div>

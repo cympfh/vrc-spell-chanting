@@ -47,10 +47,11 @@ class Spell(BaseModel):
 @app.post("/api/spell")
 async def post_spell(spell: Spell):
     """Run spell"""
+    assert len(spell.text) > 0
     logger.info("Running spell: %s", spell)
     d, cmd = min(
         [
-            (distance(spell.text, cmd["spell"]) / len(spell.text), cmd)
+            (distance(spell.text.lower(), cmd["spell"].lower()) / len(spell.text), cmd)
             for cmd in config["spell"]["commands"]
         ],
         key=lambda t: t[0],
@@ -62,7 +63,7 @@ async def post_spell(spell: Spell):
     else:
         logger.info("Similar spell found: %s with d=%s", cmd, d)
         client.send(cmd["dest"], cmd["args"])
-        return {"status": 200}
+        return {"status": 200, "spell": cmd["spell"]}
 
 
 @app.get("/api/spells")

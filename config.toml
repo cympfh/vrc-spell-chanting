@@ -2,20 +2,19 @@
 lang = "en-US"  # "en-US" for English. Only en-US is supported now.
 threshold = 0.3  # acceptable error-rate for speech recognition
 commands = [
-  {spell = "hair zero", dest = "/avatar/parameters/hair", args=[0.0]},
-  {spell = "hair white", dest = "/avatar/parameters/hair", args=[0.0]},
-  {spell = "hair one", dest = "/avatar/parameters/hair", args=[0.2]},
-  {spell = "hair black", dest = "/avatar/parameters/hair", args=[0.2]},
-  {spell = "hair two", dest = "/avatar/parameters/hair", args=[0.3]},
-  {spell = "hair brown", dest = "/avatar/parameters/hair", args=[0.3]},
-  {spell = "hair three", dest = "/avatar/parameters/hair", args=[0.4]},
-  {spell = "hair twin white", dest = "/avatar/parameters/hair", args=[0.4]},
-  {spell = "hair four", dest = "/avatar/parameters/hair", args=[0.6]},
-  {spell = "hair twin black", dest = "/avatar/parameters/hair", args=[0.6]},
-  {spell = "hair five", dest = "/avatar/parameters/hair", args=[0.7]},
-  {spell = "hair short white", dest = "/avatar/parameters/hair", args=[0.7]},
-  {spell = "hair six", dest = "/avatar/parameters/hair", args=[0.9]},
-  {spell = "hair short black", dest = "/avatar/parameters/hair", args=[0.9]},
+  {spell = "white hair", dest = "/avatar/parameters/hair", args=[0.0]},
+  {spell = "twin white hair", dest = "/avatar/parameters/hair", args=[0.4]},
+  {spell = "white twin hair", dest = "/avatar/parameters/hair", args=[0.4]},
+  {spell = "short white hair", dest = "/avatar/parameters/hair", args=[0.7]},
+  {spell = "white short hair", dest = "/avatar/parameters/hair", args=[0.7]},
+
+  {spell = "black hair", dest = "/avatar/parameters/hair", args=[0.2]},
+  {spell = "short black hair", dest = "/avatar/parameters/hair", args=[0.9]},
+  {spell = "black short hair", dest = "/avatar/parameters/hair", args=[0.9]},
+  {spell = "twin black hair", dest = "/avatar/parameters/hair", args=[0.6]},
+  {spell = "black twin hair", dest = "/avatar/parameters/hair", args=[0.6]},
+
+  {spell = "brown hair", dest = "/avatar/parameters/hair", args=[0.3]},
 ]
 
 [vrchat]
