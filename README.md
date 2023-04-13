@@ -7,20 +7,15 @@ VRChat/OSC by Speech Recognition
 ## ARCHITECTURE
 
 ```
-[Chrome]--(speech recognition)->[Python]--(OSC)->[VRChat]
+[Google Chrome]--(speech recognition)->[Python]--(OSC)->[VRChat]
 ```
 
 ## Requirements
 
 - Python3.11
     - Plan: also works on Docker
-- Chrome browser
-    - or other chromium can work?
-
-## Status
-
-- it works on Chrome/Python3.11
-    - Speech recognition has some inconveniences
+- Google Chrome browser
+    - or other chromium can work? (not tested)
 
 ## Setup & Startup
 

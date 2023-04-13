@@ -1,4 +1,4 @@
-DOCKER_TAG := fastsvelte
+DOCKER_TAG := vrc-spell-chanting
 HOST := 0.0.0.0
 PORT := 8080
 
@@ -6,6 +6,7 @@ dev:
 	uvicorn server:app --port $(PORT) --debug
 
 build:
+	pip install -r requirements.txt
 	cd web; make build
 
 serve: build
