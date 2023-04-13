@@ -1,0 +1,24 @@
+[spell]
+lang = "en-US"  # "en-US" for English. Only en-US is supported now.
+threshold = 0.3  # acceptable error-rate for speech recognition
+commands = [
+  {spell = "hair zero", dest = "/avatar/parameters/hair", args=[0.0]},
+  {spell = "hair white", dest = "/avatar/parameters/hair", args=[0.0]},
+  {spell = "hair one", dest = "/avatar/parameters/hair", args=[0.2]},
+  {spell = "hair black", dest = "/avatar/parameters/hair", args=[0.2]},
+  {spell = "hair two", dest = "/avatar/parameters/hair", args=[0.3]},
+  {spell = "hair brown", dest = "/avatar/parameters/hair", args=[0.3]},
+  {spell = "hair three", dest = "/avatar/parameters/hair", args=[0.4]},
+  {spell = "hair twin white", dest = "/avatar/parameters/hair", args=[0.4]},
+  {spell = "hair four", dest = "/avatar/parameters/hair", args=[0.6]},
+  {spell = "hair twin black", dest = "/avatar/parameters/hair", args=[0.6]},
+  {spell = "hair five", dest = "/avatar/parameters/hair", args=[0.7]},
+  {spell = "hair short white", dest = "/avatar/parameters/hair", args=[0.7]},
+  {spell = "hair six", dest = "/avatar/parameters/hair", args=[0.9]},
+  {spell = "hair short black", dest = "/avatar/parameters/hair", args=[0.9]},
+]
+
+[vrchat]
+send_port = 9000
+recv_port = 9001
+host = "$WIN"  # "$WIN": Windows port from WSL, "localhost" or IP "000.000.000.000"

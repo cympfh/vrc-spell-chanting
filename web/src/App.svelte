@@ -4,73 +4,95 @@
   import { globe, caretRight } from "svelte-awesome/icons";
   import Footer from "./components/Footer.svelte";
 
-  const pathname = location.pathname;
-
-  let greeting_message = "...";
-
-  function update_greeting() {
-    let params = {};
-    if (pathname != "/") {
-      params.name = pathname;
-    }
-    let query = new URLSearchParams(params).toString();
-    fetch(`/api/greeting?${query}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.msg) {
-          greeting_message = data.msg;
-        } else {
-          console.warn(`Bad Response: ${data}`);
-        }
-      });
+  let spell = "";
+  function post_spell() {
+    fetch('/api/spell', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"text": spell})
+    });
   }
 
+  let spelltable = [];
+  function get_spell_table() {
+    fetch('/api/spells').then(res => res.json()).then(data => {
+      spelltable = data;
+    });
+  }
+
+  var SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+  var recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous = true;
+  recognition.onsoundstart = () => {
+    console.log('[I] Listening...')
+  };
+  recognition.onnomatch = () => {
+    console.log('[I] NoMatch (try again)');
+  };
+  recognition.onerror = (err) => {
+    console.log('[I] Error', err);
+  };
+  recognition.onsoundend = () => {
+    console.log('[I] End');
+    post_spell();
+  };
+  recognition.onresult = (event) => {
+    for (var i = event.resultIndex; i < event.results.length; i++){
+      if (event.results[i].isFinal){
+        spell = event.results[i][0].transcript;
+      } else{
+        spell = event.results[i][0].transcript;
+      }
+    }
+  };
+
   onMount(() => {
-    update_greeting();
+    get_spell_table();
+    recognition.start();
   });
 </script>
 
 <svelte:head>
-  <title>FastSvelte App - {pathname}</title>
+  <title>Spell chanting</title>
 </svelte:head>
 
-<section class="hero">
-  <div class="hero-body">
-    <p class="title">{greeting_message}</p>
-  </div>
-</section>
-
 <div class="section">
   <div class="container">
-    {#if pathname == "/"}
-      <div class="content">
-        You are on the toplevel <code>/</code>. Try Access to other pages.
+    <div class="field has-addons">
+      <div class="control">
+        <form on:submit|preventDefault={post_spell}>
+          <input class="input" type="text" placeholder="spell here" bind:value={spell}>
+        </form>
       </div>
-    {:else if pathname.startsWith("/info")}
-      <div class="content">
-        This is a <code>/info</code> page.
+      <div class="control">
+        <a class="button is-info" on:click={post_spell}>
+          Run
+        </a>
       </div>
-    {:else}
-      <div class="content">
-        Unknown page <code>{pathname}</code>.
-      </div>
-    {/if}
-  </div>
-</div>
-
-<div class="section">
-  <div class="container">
-    <div class="content">
-      <ul>
-        <li><a href="/">/</a>,</li>
-        <li><a href="/info">/info</a>,</li>
-        <li><a href="/info/xxx">/info/xxx</a>.</li>
-      </ul>
     </div>
   </div>
 </div>
 
-<Footer>A Template by @cympfh. Please use freely under MIT LICENSE.</Footer>
+{#if spelltable}
+<div class="section">
+  <div class="container">
+    <h2 class="subtitle">Spells</h2>
+    <div class="content">
+      <ul>
+      {#each spelltable as s, i}
+        <li><kbd>{s.spell}</kbd> <code>({s.dest}, {s.args})</code></li>
+      {/each}
+      </ul>
+    </div>
+  </div>
+</div>
+{/if}
+
+<Footer><a href="https://github.com/cympfh/vrc-spell-chanting">cympfh/vrc-spell-chanting</a></Footer>
 
 <style global lang="scss">
   @import "main.scss";

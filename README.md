@@ -1,18 +1,31 @@
-# FastSvelte = FastAPI + Svelte
+# VRC/spell-chanting
 
-A Template for Single-page App using [FastAPI](https://fastapi.tiangolo.com/) + [Svelte](https://svelte.dev/)
+__This is Experimental__
 
-## Why?
+VRChat/OSC by Speech Recognition
 
-- [FastAPI](https://fastapi.tiangolo.com/)
-    - Typed & Fast Way to build a API Server using Python
-- [Svelte](https://svelte.dev/)
-    - Fast & Easy to Modern Front-end
-    - and supporting TypeScript!
+## ARCHITECTURE
 
-## Start up Sample Project
+```
+[Chrome]--(speech recognition)->[Python]--(OSC)->[VRChat]
+```
 
-Clone this, then
+## Requirements
+
+- Python3.11
+    - Plan: also works on Docker
+- Chrome browser
+    - or other chromium can work?
+
+## Status
+
+- it works on Chrome/Python3.11
+    - Speech recognition has some inconveniences
+
+## Setup & Startup
+
+Spell and OSC destinations are defined in `config.toml`.
+Please edit it at first.
 
 ```bash
 # on local
@@ -27,34 +40,3 @@ make serve-docker
 ```
 
 And open `localhost:8080`.
-
-## Development
-
-### Server Side (Python/FastAPI)
-
-Check `./server.py`
-
-```python
-# Define API functions
-@app.get("/api/greeting")
-def greeting(name: Optional[str] = None):
-    """Greeting you"""
-    if name:
-        return {"msg": f"Hello {name}!"}
-    return {"msg": "Hi!"}
-
-# URLs other than APIs are
-# - static files under `web/public` if exists
-#    - /aaa/bbb -> `./web/public/aaa/bbb`
-# - Returns `web/public/index.html` else
-#    - SPA on Front-end side
-app.mount("/", MountFiles(directory="web/public", html=True), name="static")
-```
-
-Use `make dev` to enable hot-reloading.
-
-### Front-end Side (TypeScript/Svelte)
-
-cd `web/` and check `src/App.svelte`.
-
-Use `make dev` to enable hot-reloading.
