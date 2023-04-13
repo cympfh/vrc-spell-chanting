@@ -1,14 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Icon from "svelte-awesome";
-  import { infoCircle } from "svelte-awesome/icons";
+  import { infoCircle, pencil } from "svelte-awesome/icons";
   import Footer from "./components/Footer.svelte";
 
-  let status = 200;
-  let listening = false;
-  let message = "Click Start and Speech";
+  let status = "Not Ready";
+  let last_status_code = 200;
+  let message = "";
   let spelltable = [];
-  let lang = "";
 
   var SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
   var recognition = new SpeechRecognition();
@@ -23,6 +22,7 @@
     fetch('/api/lang').then(res => res.json()).then(lang => {
       console.log(lang);
       recognition.lang = lang;
+      status = "Ready";
     });
   }
 
@@ -38,8 +38,8 @@
       body: JSON.stringify({"text": spell})
     }).then(res => res.json()).then(data => {
       console.log(data);
-      status = data.status;
-      if (status == 200) {
+      last_status_code = data.status;
+      if (last_status_code == 200) {
         message = `OK: ${data.spell}`;
       } else {
         message = `Failed: ${spell}`;
@@ -75,20 +75,23 @@
   };
   function kick_recognition() {
     console.log("kick_recognition");
-    if (listening) {
+    try {
       recognition.stop();
+    } catch(e) {
     }
     setTimeout(() => {
-      recognition.start();
-      listening = true;
+      try {
+        recognition.start();
+      } catch(e) {}
+      status = "Now listening...";
     }, 200);
   }
   function stop_recognition() {
     console.log("stop_recognition");
-    if (listening) {
+    try {
       recognition.stop();
-    }
-    listening = false;
+      status = "Ready";
+    } catch(e) {}
   }
 
   onMount(() => {
@@ -102,10 +105,16 @@
 
 <div class="section">
   <div class="container">
+    <div class="field">
+      <div>
+        <Icon data={pencil} />
+        { status }
+      </div>
+    </div>
     <div class="field has-addons">
       <div class="control">
         <form on:submit|preventDefault={post_spell}>
-          <input class="input" class:is-info={status == 200} class:is-danger={ status != 200 } type="text" placeholder="spell here" bind:value={spell}>
+          <input class="input" class:is-info={last_status_code == 200} class:is-danger={ last_status_code != 200 } type="text" placeholder="spell here" bind:value={spell}>
         </form>
       </div>
       <div class="control">
