@@ -7,6 +7,24 @@
   let status = 200;
   let listening = false;
   let message = "Click Start and Speech";
+  let spelltable = [];
+  let lang = "";
+
+  var SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+  var recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  // recognition.continuous = true;
+
+  function init() {
+    fetch('/api/spells').then(res => res.json()).then(data => {
+      spelltable = data;
+    });
+    fetch('/api/lang').then(res => res.json()).then(lang => {
+      console.log(lang);
+      recognition.lang = lang;
+    });
+  }
 
   let spell = "";
   function post_spell() {
@@ -22,27 +40,14 @@
       console.log(data);
       status = data.status;
       if (status == 200) {
-        spell = "";
         message = `OK: ${data.spell}`;
       } else {
-        message = "Failed";
+        message = `Failed: ${spell}`;
       }
+      spell = "";
     });
   }
 
-  let spelltable = [];
-  function get_spell_table() {
-    fetch('/api/spells').then(res => res.json()).then(data => {
-      spelltable = data;
-    });
-  }
-
-  var SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
-  var recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-  // recognition.lang = "ja-JP";
-  recognition.interimResults = true;
-  // recognition.continuous = true;
   recognition.onsoundstart = () => {
     console.log('[I] Listening...')
   };
@@ -87,7 +92,7 @@
   }
 
   onMount(() => {
-    get_spell_table();
+    init();
   });
 </script>
 

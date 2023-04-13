@@ -66,6 +66,11 @@ async def post_spell(spell: Spell):
         return {"status": 200, "spell": cmd["spell"]}
 
 
+@app.get("/api/lang")
+async def get_lang() -> str:
+    return config["spell"]["lang"]
+
+
 @app.get("/api/spells")
 async def get_spells() -> list[dict]:
     return config["spell"]["commands"]

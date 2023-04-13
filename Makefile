@@ -9,7 +9,7 @@ build:
 	cd web; make build
 
 serve: build
-	uvicorn server:app --host $(HOST) --port $(PORT)
+	uvicorn server:app --host $(HOST) --port $(PORT) --reload
 
 build-docker:
 	docker build -t $(DOCKER_TAG):latest .
