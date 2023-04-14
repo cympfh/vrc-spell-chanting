@@ -62,10 +62,12 @@ commands = [
   {spell = "ペンで書く", dest = "/avatar/parameters/PPPen_Write", args=[1]},
   {spell = "ペンを取り出す", dest = "/avatar/parameters/PPPen_Write", args=[1]},
   {spell = "ペンをしまう", dest = "/avatar/parameters/PPPen_Write", args=[0]},
-
 ]
 
 [vrchat]
 send_port = 9000
 recv_port = 9001
-host = "$WIN"  # "$WIN": Windows port from WSL, "localhost" or IP "000.000.000.000"
+
+# hostname or IP of the machine running VRChat
+# If you are on WSL2 (not docker) and VRChat running on Windows host, you can use "$WIN"
+host = "192.168.10.10"
