@@ -48,6 +48,11 @@
     });
   }
 
+  function click_spell(event) {
+    spell = event.target.innerText;
+    post_spell();
+  }
+
   recognition.onsoundstart = () => {
     console.log('[I] Listening...')
   };
@@ -100,7 +105,7 @@
 </script>
 
 <svelte:head>
-  <title>Spell chanting</title>
+	<title>VRC/Spell chanting</title>
 </svelte:head>
 
 <div class="section">
@@ -152,8 +157,8 @@
     <h2 class="subtitle">Spells</h2>
     <div class="content">
       <ul>
-      {#each spelltable as s, i}
-        <li><kbd>{s.spell}</kbd> <code>({s.dest}, {s.args})</code></li>
+      {#each spelltable as s}
+        <li><kbd><a on:click={click_spell}>{s.spell}</a></kbd> <code>({s.dest}, {s.args})</code></li>
       {/each}
       </ul>
     </div>
