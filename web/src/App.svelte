@@ -1,32 +1,35 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Icon from "svelte-awesome";
-  import { infoCircle, pencil } from "svelte-awesome/icons";
+  import { infoCircle, pencil, play, pause } from "svelte-awesome/icons";
   import Footer from "./components/Footer.svelte";
 
-  let status = "Not Ready";
-  let last_status_code = 200;
-  let message = "";
-  let spelltable = [];
+  let spell = "";
+  let vrc = {
+    status: "Not Ready",
+    last_status_code: 200,
+    result: "",
+    spelltable: [],
+    lang: "en-US",
+  };
 
   var SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
   var recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
+  recognition.lang = vrc.lang;
   recognition.interimResults = true;
   // recognition.continuous = true;
 
   function init() {
     fetch('/api/spells').then(res => res.json()).then(data => {
-      spelltable = data;
+      vrc.spelltable = data;
     });
     fetch('/api/lang').then(res => res.json()).then(lang => {
-      console.log(lang);
+      vrc.lang = lang;
       recognition.lang = lang;
-      status = "Ready";
+      vrc.status = "Ready";
     });
   }
 
-  let spell = "";
   function post_spell() {
     if (spell === "") return;
     console.log("POST", spell);
@@ -38,11 +41,11 @@
       body: JSON.stringify({"text": spell})
     }).then(res => res.json()).then(data => {
       console.log(data);
-      last_status_code = data.status;
-      if (last_status_code == 200) {
-        message = `OK: ${data.spell}`;
+      vrc.last_status_code = data.status;
+      if (vrc.last_status_code == 200) {
+        vrc.result = `OK: ${data.spell}`;
       } else {
-        message = `Failed: ${spell}`;
+        vrc.result = `Failed: ${spell}`;
       }
       spell = "";
     });
@@ -88,14 +91,14 @@
       try {
         recognition.start();
       } catch(e) {}
-      status = "Now listening...";
+      vrc.status = "Now listening...";
     }, 200);
   }
   function stop_recognition() {
     console.log("stop_recognition");
     try {
       recognition.stop();
-      status = "Ready";
+      vrc.status = "Ready";
     } catch(e) {}
   }
 
@@ -110,54 +113,65 @@
 
 <div class="section">
   <div class="container">
-    <div class="field">
-      <div>
-        <Icon data={pencil} />
-        { status }
-      </div>
-    </div>
     <div class="field has-addons">
+      <div class="control">
+        {#if vrc.status == "Not Ready"}
+        <a class="button is-info" disabled>
+          <Icon data={play} />
+        </a>
+        {:else if vrc.status == "Ready"}
+        <a class="button is-info" on:click={kick_recognition}>
+          <Icon data={play} />
+        </a>
+        {:else}
+        <a class="button is-info" on:click={stop_recognition}>
+          <Icon data={pause} />
+        </a>
+        {/if}
+      </div>
       <div class="control">
         <form on:submit|preventDefault={post_spell}>
-          <input class="input" class:is-info={last_status_code == 200} class:is-danger={ last_status_code != 200 } type="text" placeholder="spell here" bind:value={spell}>
+          <input class="input"
+            class:is-info={vrc.last_status_code == 200}
+            class:is-danger={ vrc.last_status_code != 200 }
+            type="text" placeholder="Start to speech" bind:value={spell} />
         </form>
       </div>
-      <div class="control">
-        <a class="button is-info" on:click={post_spell}>
-          Run
-        </a>
-      </div>
-    </div>
-    <div class="field has-addons">
-      <div class="control">
-        <a class="button is-info" on:click={kick_recognition}>
-          Start
-        </a>
-      </div>
-      <div class="control">
-        <a class="button is-info" on:click={stop_recognition}>
-          End
-        </a>
-      </div>
-    </div>
-    <div class="field">
-      {#if message}
-        <div>
-          <Icon data={infoCircle} />
-          { message }
-        </div>
-      {/if}
     </div>
   </div>
 </div>
 
-{#if spelltable}
+<div class="section">
+  <div class="container">
+    <article class="message">
+      <div class="message-body">
+
+        <div class="field">
+          <div>
+            <Icon data={pencil} />
+            { vrc.status }
+          </div>
+        </div>
+
+        {#if vrc.result}
+        <div>
+          <Icon data={infoCircle} />
+          { vrc.result }
+        </div>
+        {/if}
+
+      </div>
+    </article>
+  </div>
+</div>
+
+{#if vrc.spelltable}
 <div class="section">
   <div class="container">
     <h2 class="subtitle">Spells</h2>
     <div class="content">
       <ul>
-      {#each spelltable as s}
+      {#each vrc.spelltable as s}
         <li><kbd><a on:click={click_spell}>{s.spell}</a></kbd> <code>({s.dest}, {s.args})</code></li>
       {/each}
       </ul>
