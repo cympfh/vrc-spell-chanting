@@ -62,6 +62,14 @@ commands = [
   {spell = "ペンで書く", dest = "/avatar/parameters/PPPen_Write", args=[1]},
   {spell = "ペンを取り出す", dest = "/avatar/parameters/PPPen_Write", args=[1]},
   {spell = "ペンをしまう", dest = "/avatar/parameters/PPPen_Write", args=[0]},
+
+  # Magic command for free-textchat
+  {spell = "start to chat", dest = "/textchat/start", args=[]},
+  {spell = "end to chat", dest = "/textchat/end", args=[]},
+  {spell = "話す", dest = "/textchat/start", args=[]},
+  {spell = "終わり", dest = "/textchat/end", args=[]},
+  {spell = "終わる", dest = "/textchat/end", args=[]},
+
 ]
 
 [vrchat]
