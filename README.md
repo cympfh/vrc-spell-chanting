@@ -12,25 +12,24 @@ VRChat/OSC by Speech Recognition
 
 ## Requirements
 
-- Python3.11
-    - Plan: also works on Docker
+- Python3.11 or Docker
 - Google Chrome browser
     - or other chromium can work? (not tested)
 
 ## Setup & Startup
 
-Spell and OSC destinations are defined in `config.toml`.
+Spells are defined in `config.toml`.
 Please edit it at first.
 
+### if you can use Python3.11...
+
 ```bash
-# on local
-make build
 make serve
 ```
 
+### if you can use Docker...
+
 ```bash
-# on docker
-make build-docker
 make serve-docker
 ```
 

@@ -28,9 +28,10 @@ logger.info(config)
 
 class OSC:
     def __init__(self, config):
-        self.client = udp_client.SimpleUDPClient(
-            config["vrchat"]["host"], config["vrchat"]["send_port"]
-        )
+        host = config["vrchat"]["host"]
+        port = config["vrchat"]["send_port"]
+        logger.info("Connecting to host=%s, port=%s", host, port)
+        self.client = udp_client.SimpleUDPClient(host, port)
 
     def send(self, dest: str, args: list):
         logger.info("send: %s %s", dest, args)

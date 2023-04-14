@@ -1,10 +1,10 @@
-FROM python:3.9.6-slim
+FROM python:3.11-slim
 
 # Install node
 RUN apt update && apt install -y curl
 RUN curl -L git.io/nodebrew | perl - setup
-RUN $HOME/.nodebrew/nodebrew install-binary v16.4.1 && \
-    $HOME/.nodebrew/nodebrew use v16.4.1
+RUN $HOME/.nodebrew/nodebrew install-binary v19.5.0 && \
+    $HOME/.nodebrew/nodebrew use v19.5.0
 ENV PATH "/root/.nodebrew/current/bin:$PATH"
 
 WORKDIR /app
