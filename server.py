@@ -91,7 +91,7 @@ async def post_spell(spell: Spell):
     elif client.chating:
         logger.info("Chat: %s", spell.text)
         client.chat(spell.text)
-        return {"status": 200, "spell": "[chat mode]"}
+        return {"status": 200, "spell": "[chat mode]", "text": spell.text}
     elif ok:
         logger.info("Running Spell: %s with dist=%s", cmd, dist)
         client.send(cmd["dest"], cmd["args"])

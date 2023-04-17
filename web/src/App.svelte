@@ -5,6 +5,8 @@
   import Footer from "./components/Footer.svelte";
 
   let spell = "";
+  let last_spell = "";
+  let freezing = 0;
   let vrc = {
     status: "Not Ready",
     last_status_code: 200,
@@ -47,8 +49,8 @@
       } else {
         vrc.result = `Failed: ${spell}`;
       }
-      spell = "";
     });
+    spell = "";
   }
 
   function click_spell(event) {
@@ -61,10 +63,12 @@
   };
   recognition.onnomatch = () => {
     console.log('[I] NoMatch (try again)');
+    spell = "";
     kick_recognition();
   };
   recognition.onerror = (err) => {
     console.log('[I] Error', err);
+    spell = "";
     kick_recognition();
   };
   recognition.onsoundend = () => {
@@ -73,16 +77,15 @@
     kick_recognition();
   };
   recognition.onresult = (event) => {
-    for (var i = event.resultIndex; i < event.results.length; i++){
-      if (event.results[i].isFinal){
-        spell = event.results[i][0].transcript;
-      } else{
-        spell = event.results[i][0].transcript;
-      }
-    }
+    let transcript = event.results[0][0].transcript;
+    if (transcript === "") return;
+    spell = transcript;
+    freezing = 0;
+    console.log("Recog:", spell);
   };
   function kick_recognition() {
     console.log("kick_recognition");
+    freezing = 0;
     try {
       recognition.stop();
     } catch(e) {
@@ -96,14 +99,33 @@
   }
   function stop_recognition() {
     console.log("stop_recognition");
+    freezing = 0;
     try {
-      recognition.stop();
       vrc.status = "Ready";
+      spell = "";
+      recognition.stop();
     } catch(e) {}
+  }
+
+  function watch_spell() {
+    if (vrc.status !== "Now listening...") return;
+    if (spell === last_spell) {   // freeze?
+      freezing += 1;
+    } else {
+      freezing = 0;
+    }
+    console.log("watch", spell, last_spell, freezing);
+    if (freezing >= 10) {
+      spell == "";
+      stop_recognition();
+      setTimeout(kick_recognition, 10);
+    }
+    last_spell = spell;
   }
 
   onMount(() => {
     init();
+    setInterval(watch_spell, 1000);
   });
 </script>
 
