@@ -1,3 +1,4 @@
+# neco v2.9
 [spell]
 lang = "ja-JP"  # "en-US" for English, "ja-JP" for Japanese
 threshold = 0.3  # acceptable error-rate for speech recognition
@@ -51,6 +52,8 @@ commands = [
   {spell = "ワンピース", dest = "/avatar/parameters/Costume", args=[3]},
   {spell = "ONE PIECE", dest = "/avatar/parameters/Costume", args=[3]},
   {spell = "ロングワンピース", dest = "/avatar/parameters/Costume", args=[3]},
+  {spell = "パーカ", dest = "/avatar/parameters/Costume", args=[4]},
+  {spell = "ハム パーカ", dest = "/avatar/parameters/Costume", args=[4]},
 
   # head accessory
   {spell = "頭なし", dest = "/avatar/parameters/HeadCostume", args=[0]},
@@ -70,6 +73,8 @@ commands = [
   {spell = "終わり", dest = "/textchat/end", args=[]},
   {spell = "終わる", dest = "/textchat/end", args=[]},
 
+  # Protect Kanban
+  {spell = "ひらけごま", dest = "/avatar/parameters/CympfhKanban", args=[127]},
 ]
 
 [vrchat]
