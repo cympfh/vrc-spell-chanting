@@ -1,37 +1,22 @@
-# neco v2.9
+# neco v3.0
 [spell]
 lang = "ja-JP"  # "en-US" for English, "ja-JP" for Japanese
 threshold = 0.3  # acceptable error-rate for speech recognition
 commands = [
-  # hair style
-  {spell = "金髪", dest = "/avatar/parameters/hair", args=[0.0]},
-  {spell = "white hair", dest = "/avatar/parameters/hair", args=[0.0]},
-  {spell = "金髪ツイン", dest = "/avatar/parameters/hair", args=[0.4]},
-  {spell = "twin white hair", dest = "/avatar/parameters/hair", args=[0.4]},
-  {spell = "white twin hair", dest = "/avatar/parameters/hair", args=[0.4]},
-  {spell = "金髪ショート", dest = "/avatar/parameters/hair", args=[0.7]},
-  {spell = "short white hair", dest = "/avatar/parameters/hair", args=[0.7]},
-  {spell = "white short hair", dest = "/avatar/parameters/hair", args=[0.7]},
-
-  {spell = "黒髪", dest = "/avatar/parameters/hair", args=[0.2]},
-  {spell = "black hair", dest = "/avatar/parameters/hair", args=[0.2]},
-  {spell = "黒髪ショート", dest = "/avatar/parameters/hair", args=[0.9]},
-  {spell = "short black hair", dest = "/avatar/parameters/hair", args=[0.9]},
-  {spell = "black short hair", dest = "/avatar/parameters/hair", args=[0.9]},
-  {spell = "黒髪ツイン", dest = "/avatar/parameters/hair", args=[0.6]},
-  {spell = "twin black hair", dest = "/avatar/parameters/hair", args=[0.6]},
-  {spell = "black twin hair", dest = "/avatar/parameters/hair", args=[0.6]},
-
-  {spell = "茶髪", dest = "/avatar/parameters/hair", args=[0.3]},
-
   # hand
-  {spell = "猫の手", dest = "/avatar/parameters/TE", args=[1]},
-  {spell = "人の手", dest = "/avatar/parameters/TE", args=[0]},
+  {spell = "猫の手", dest = "/avatar/parameters/hand", args=[1]},
+  {spell = "人の手", dest = "/avatar/parameters/hand", args=[0]},
 
-  # AFK
-  {spell = "退席", dest = "/avatar/parameters/AFK", args=[1]},
-  {spell = "体積", dest = "/avatar/parameters/AFK", args=[1]},
-  {spell = "戻ってきた", dest = "/avatar/parameters/AFK", args=[0]},
+  # hair
+  {spell = "黒髪", dest = "/avatar/parameters/hair", args=[0.0]},
+  {spell = "金髪", dest = "/avatar/parameters/hair", args=[0.15]},
+  {spell = "茶髪", dest = "/avatar/parameters/hair", args=[0.25]},
+  {spell = "黒髪ツイン", dest = "/avatar/parameters/hair", args=[0.35]},
+  {spell = "金髪ツイン", dest = "/avatar/parameters/hair", args=[0.45]},
+  {spell = "茶髪ツイン", dest = "/avatar/parameters/hair", args=[0.55]},
+  {spell = "黒髪ショート", dest = "/avatar/parameters/hair", args=[0.65]},
+  {spell = "金髪ショート", dest = "/avatar/parameters/hair", args=[0.75]},
+  {spell = "茶髪ショート", dest = "/avatar/parameters/hair", args=[0.85]},
 
   # earring
   {spell = "右耳 なし", dest = "/avatar/parameters/rightear", args=[0]},
@@ -46,19 +31,15 @@ commands = [
   {spell = "左耳 ダイヤモンド", dest = "/avatar/parameters/leftear", args=[4]},
 
   # costume
-  {spell = "メイド服", dest = "/avatar/parameters/Costume", args=[0]},
-  {spell = "学生服", dest = "/avatar/parameters/Costume", args=[1]},
-  {spell = "パジャマ", dest = "/avatar/parameters/Costume", args=[2]},
-  {spell = "ワンピース", dest = "/avatar/parameters/Costume", args=[3]},
-  {spell = "ONE PIECE", dest = "/avatar/parameters/Costume", args=[3]},
-  {spell = "ロングワンピース", dest = "/avatar/parameters/Costume", args=[3]},
-  {spell = "パーカ", dest = "/avatar/parameters/Costume", args=[4]},
-  {spell = "ハム パーカ", dest = "/avatar/parameters/Costume", args=[4]},
+  {spell = "メイド服", dest = "/avatar/parameters/costume", args=[0]},
+  {spell = "学生服", dest = "/avatar/parameters/costume", args=[1]},
+  {spell = "パジャマ", dest = "/avatar/parameters/costume", args=[2]},
+  {spell = "パーカ", dest = "/avatar/parameters/costume", args=[3]},
+  {spell = "ハム パーカ", dest = "/avatar/parameters/costume", args=[3]},
 
   # head accessory
-  {spell = "頭なし", dest = "/avatar/parameters/HeadCostume", args=[0]},
-  {spell = "リボン", dest = "/avatar/parameters/HeadCostume", args=[1]},
-  {spell = "頭 ドレス", dest = "/avatar/parameters/HeadCostume", args=[2]},
+  {spell = "頭なし", dest = "/avatar/parameters/head", args=[0.0]},
+  {spell = "リボン", dest = "/avatar/parameters/head", args=[0.2]},
 
   # PPPen
   {spell = "ペンを使う", dest = "/avatar/parameters/PPPen_Write", args=[1]},
@@ -73,8 +54,12 @@ commands = [
   {spell = "終わり", dest = "/textchat/end", args=[]},
   {spell = "終わる", dest = "/textchat/end", args=[]},
 
-  # Protect Kanban
-  {spell = "ひらけごま", dest = "/avatar/parameters/CympfhKanban", args=[127]},
+  # 成仏システム
+  {spell = "開けゴマ", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
+  {spell = "ひらけごま", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
+  {spell = "成仏", dest = "/avatar/parameters/PPPen_Height", args=[159]},
+  {spell = "閉じろ ごま", dest = "/avatar/parameters/VRCFaceBlendK", args=[0]},
+  {spell = "堕落", dest = "/avatar/parameters/PPPen_Height", args=[0]},
 ]
 
 [vrchat]
