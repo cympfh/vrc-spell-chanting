@@ -3,50 +3,6 @@
 lang = "ja-JP"  # "en-US" for English, "ja-JP" for Japanese
 threshold = 0.3  # acceptable error-rate for speech recognition
 commands = [
-  # hand
-  {spell = "猫の手", dest = "/avatar/parameters/hand", args=[1]},
-  {spell = "人の手", dest = "/avatar/parameters/hand", args=[0]},
-
-  # hair
-  {spell = "黒髪", dest = "/avatar/parameters/hair", args=[0.0]},
-  {spell = "金髪", dest = "/avatar/parameters/hair", args=[0.15]},
-  {spell = "茶髪", dest = "/avatar/parameters/hair", args=[0.25]},
-  {spell = "黒髪ツイン", dest = "/avatar/parameters/hair", args=[0.35]},
-  {spell = "金髪ツイン", dest = "/avatar/parameters/hair", args=[0.45]},
-  {spell = "茶髪ツイン", dest = "/avatar/parameters/hair", args=[0.55]},
-  {spell = "黒髪ショート", dest = "/avatar/parameters/hair", args=[0.65]},
-  {spell = "金髪ショート", dest = "/avatar/parameters/hair", args=[0.75]},
-  {spell = "茶髪ショート", dest = "/avatar/parameters/hair", args=[0.85]},
-
-  # earring
-  {spell = "右耳 なし", dest = "/avatar/parameters/rightear", args=[0]},
-  {spell = "右耳 ウェーブ", dest = "/avatar/parameters/rightear", args=[1]},
-  {spell = "右耳 鎖", dest = "/avatar/parameters/rightear", args=[2]},
-  {spell = "右耳 十字架", dest = "/avatar/parameters/rightear", args=3},
-  {spell = "右耳 ダイヤモンド", dest = "/avatar/parameters/rightear", args=[4]},
-  {spell = "左耳 なし", dest = "/avatar/parameters/leftear", args=[0]},
-  {spell = "左耳 ウェーブ", dest = "/avatar/parameters/leftear", args=[1]},
-  {spell = "左耳 鎖", dest = "/avatar/parameters/leftear", args=[2]},
-  {spell = "左耳 十字架", dest = "/avatar/parameters/leftear", args=[3]},
-  {spell = "左耳 ダイヤモンド", dest = "/avatar/parameters/leftear", args=[4]},
-
-  # costume
-  {spell = "メイド服", dest = "/avatar/parameters/costume", args=[0]},
-  {spell = "学生服", dest = "/avatar/parameters/costume", args=[1]},
-  {spell = "パジャマ", dest = "/avatar/parameters/costume", args=[2]},
-  {spell = "パーカ", dest = "/avatar/parameters/costume", args=[3]},
-  {spell = "ハム パーカ", dest = "/avatar/parameters/costume", args=[3]},
-
-  # head accessory
-  {spell = "頭なし", dest = "/avatar/parameters/head", args=[0.0]},
-  {spell = "リボン", dest = "/avatar/parameters/head", args=[0.2]},
-
-  # PPPen
-  {spell = "ペンを使う", dest = "/avatar/parameters/PPPen_Write", args=[1]},
-  {spell = "ペンで書く", dest = "/avatar/parameters/PPPen_Write", args=[1]},
-  {spell = "ペンを取り出す", dest = "/avatar/parameters/PPPen_Write", args=[1]},
-  {spell = "ペンをしまう", dest = "/avatar/parameters/PPPen_Write", args=[0]},
-
   # Magic command for free-textchat
   {spell = "start to chat", dest = "/textchat/start", args=[]},
   {spell = "end to chat", dest = "/textchat/end", args=[]},
@@ -58,8 +14,6 @@ commands = [
   {spell = "開けゴマ", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
   {spell = "ひらけごま", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
   {spell = "成仏", dest = "/avatar/parameters/PPPen_Height", args=[159]},
-  {spell = "閉じろ ごま", dest = "/avatar/parameters/VRCFaceBlendK", args=[0]},
-  {spell = "堕落", dest = "/avatar/parameters/PPPen_Height", args=[0]},
 ]
 
 [vrchat]
