@@ -58,7 +58,7 @@ translate_langs = ["en", "zh", "ko"]  # List of languages, which translate to
 
 [vrchat]
 send_port  # 9000 by default
-recv_port  # 9000 by default
+recv_port  # 9001 by default
 host       # hostname or IP of VRChat. Usually "localhost" is OK.
 ```
 
