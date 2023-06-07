@@ -69,7 +69,7 @@ class OSC:
         self.client.send_message(dest, args)
 
     def chat(self, message: str):
-        self.client.send_message("/chatbox/input", [message, True])
+        self.client.send_message("/chatbox/input", [message, True, True])
 
     def chat_translate(self, message: str):
         """
