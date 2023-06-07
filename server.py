@@ -80,7 +80,10 @@ class OSC:
         message
             日本語文
         """
-        result: dict | None = Translate("gpt-3.5-turbo").run(message)
+        translate_model = config.get("spell", {}).get("translate")
+        if not translate_model:
+            return  # NOP
+        result: dict | None = Translate(translate_model).run(message)
         if result:
             # ja = result.get("ja", "")
             en = result.get("en", "")

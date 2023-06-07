@@ -1,6 +1,7 @@
-# neco v3.0
 [spell]
 lang = "ja-JP"  # "en-US" for English, "ja-JP" for Japanese
+translate = "deepl"  # false, 'deepl', 'gpt-3.5-turbo' or 'gpt-4'
+
 threshold = 0.3  # acceptable error-rate for speech recognition
 commands = [
   # Magic command for free-textchat

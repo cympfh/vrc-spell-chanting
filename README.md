@@ -4,6 +4,8 @@ __This is Experimental__
 
 VRChat/OSC by Speech Recognition
 
+This branch `cympfh` supports cympfh, not for you.
+
 ## ARCHITECTURE
 
 ```
