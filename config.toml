@@ -12,10 +12,9 @@ commands = [
   {spell = "終わり", dest = "/textchat/end", args=[]},
   {spell = "終わる", dest = "/textchat/end", args=[]},
 
-  # 成仏システム
-  {spell = "開けゴマ", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
-  {spell = "ひらけごま", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
-  {spell = "成仏", dest = "/avatar/parameters/PPPen_Height", args=[159]},
+  # Avatar Parameters (Sample)
+  {spell = "Dress A", dest = "/avatar/parameters/dress", args=[0]},
+  {spell = "Dress B", dest = "/avatar/parameters/dress", args=[1]},
 ]
 
 [vrchat]
