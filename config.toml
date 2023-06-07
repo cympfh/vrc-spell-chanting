@@ -1,6 +1,7 @@
 [spell]
 lang = "ja-JP"  # "en-US" for English, "ja-JP" for Japanese
-translate = "deepl"  # false, 'deepl', 'gpt-3.5-turbo' or 'gpt-4'
+translate = true  # true or false, enable to translate
+translate_langs = ["en", "zh", "ko"]  # to these langs
 
 threshold = 0.3  # acceptable error-rate for speech recognition
 commands = [

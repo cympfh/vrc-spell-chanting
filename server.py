@@ -78,20 +78,18 @@ class OSC:
         Parameters
         ----------
         message
-            日本語文
+            日本語文 or English
         """
-        translate_model = config.get("spell", {}).get("translate")
-        if not translate_model:
+        translate_mode = config.get("spell", {}).get("translate")
+        translate_langs = config.get("spell", {}).get("translate_langs", [])
+        if not translate_mode:
             return  # NOP
-        result: dict | None = Translate(translate_model).run(message)
-        if result:
-            # ja = result.get("ja", "")
-            en = result.get("en", "")
-            cn = result.get("cn", "")
-            kr = result.get("kr", "")
-            m = f"{en} / {cn} / {kr}"
-            logger.info(f"Chat with translate: {m}")
-            self.client.send_message("/chatbox/input", [m, True])
+        translate_result = []
+        for t in Translate(translate_langs).run(message):
+            translate_result.append(t)
+        m = " / ".join(translate_result)
+        logger.info(f"Chat with translate: {m}")
+        self.client.send_message("/chatbox/input", [m, True])
 
 
 client = OSC(config)
