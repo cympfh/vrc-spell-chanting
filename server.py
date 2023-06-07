@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from pythonosc import udp_client
 
 from util.mount import MountFiles
+from util.translate import Translate
 
 app = FastAPI()
 logger = logging.getLogger("uvicorn")
@@ -68,7 +69,27 @@ class OSC:
         self.client.send_message(dest, args)
 
     def chat(self, message: str):
-        self.client.send_message("/chatbox/input", [message, True])
+        self.client.send_message("/chatbox/input", [message, True, True])
+
+    def chat_translate(self, message: str):
+        """
+        翻訳付きでチャットする
+
+        Parameters
+        ----------
+        message
+            日本語文 or English
+        """
+        translate_mode = config.get("spell", {}).get("translate")
+        translate_langs = config.get("spell", {}).get("translate_langs", [])
+        if not translate_mode:
+            return  # NOP
+        translate_result = []
+        for t in Translate(translate_langs).run(message):
+            translate_result.append(t)
+        m = " / ".join(translate_result)
+        logger.info(f"Chat with translate: {m}")
+        self.client.send_message("/chatbox/input", [m, True])
 
 
 client = OSC(config)
@@ -91,6 +112,7 @@ async def post_spell(spell: Spell):
     elif client.chating:
         logger.info("Chat: %s", spell.text)
         client.chat(spell.text)
+        client.chat_translate(spell.text)
         return {"status": 200, "spell": "[chat mode]", "text": spell.text}
     elif ok:
         logger.info("Running Spell: %s with dist=%s", cmd, dist)
