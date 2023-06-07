@@ -53,7 +53,7 @@ class OSC:
         port = config["vrchat"]["send_port"]
         logger.info("Connecting to host=%s, port=%s", host, port)
         self.client = udp_client.SimpleUDPClient(host, port)
-        self.chating = False
+        self.chating = True  # chating mode by default!!
 
     def chat_mode(self, dest: str) -> bool:
         if dest == "/textchat/start":
