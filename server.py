@@ -85,11 +85,11 @@ class OSC:
         if not translate_mode:
             return  # NOP
         translate_result = []
-        for t in Translate(translate_langs).run(message):
+        for t in Translate(translate_langs).run(message, return_original=False):
             translate_result.append(t)
         m = " / ".join(translate_result)
         logger.info(f"Chat with translate: {m}")
-        self.client.send_message("/chatbox/input", [m, True])
+        self.client.send_message("/chatbox/input", [m, True, True])
 
 
 client = OSC(config)
