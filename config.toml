@@ -15,6 +15,9 @@ commands = [
   # Avatar Parameters (Sample)
   {spell = "Dress A", dest = "/avatar/parameters/dress", args=[0]},
   {spell = "Dress B", dest = "/avatar/parameters/dress", args=[1]},
+
+  {spell = "cympfh1", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
+  {spell = "cympfh2", dest = "/avatar/parameters/PPPen_Height", args=[159]},
 ]
 
 [vrchat]
@@ -23,4 +26,4 @@ recv_port = 9001
 
 # hostname or IP of the machine running VRChat
 # If you are on WSL2 (not docker) and VRChat running on Windows host, you can use "$WIN"
-host = "192.168.10.10"
+host = "$WIN"

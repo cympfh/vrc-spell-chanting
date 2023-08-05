@@ -117,11 +117,11 @@ async def post_spell(spell: Spell):
     elif ok:
         logger.info("Running Spell: %s with dist=%s", cmd, dist)
         client.send(cmd["dest"], cmd["args"])
-        return {"status": 200, "spell": cmd["spell"]}
+        return {"status": 200, "spell": cmd["spell"], "user_spell": spell.text}
     else:
         logger.warn("Cannot found similar spells")
         logger.warn("Most similar one is: %s with dist=%s", cmd, dist)
-        return {"status": 404}
+        return {"status": 404, "error": f"not found any spell for {spell.text}"}
 
 
 @app.get("/api/lang")
