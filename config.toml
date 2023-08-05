@@ -1,7 +1,8 @@
 [spell]
 lang = "ja-JP"  # "en-US" for English, "ja-JP" for Japanese
 translate = true  # true or false, enable to translate
-translate_langs = ["en", "zh", "ko"]  # to these langs
+# translate_langs = ["en", "zh", "ko"]  # to these langs
+translate_langs = ["en", "zh", "ja"]
 
 threshold = 0.3  # acceptable error-rate for speech recognition
 commands = [

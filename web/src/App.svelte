@@ -39,20 +39,25 @@
       vrc.spell.last_updated = new Date();
     }
     clear() {
-      vrc.spell.last_data = vrc.spell.data;
-      vrc.spell.last_updated = new Date();
       vrc.spell.data = "";
+      vrc.spell.last_data = "";  // vrc.spell.data;
+      vrc.spell.last_updated = new Date();
     }
     // If the input spell is frozen, post it.
     check_frozen() {
       if (!vrc.spell.data) {
         return false;
       }
-      let elapsed = (new Date()) - vrc.spell.last_updated;
-      if (elapsed >= vrc.watch.frozen_time_ms) {
-        this.run();
-        return true;
+      if (vrc.spell.last_data === vrc.spell.data) {
+        let elapsed = (new Date()) - vrc.spell.last_updated;
+        if (elapsed >= vrc.watch.frozen_time_ms) {
+          this.run();
+          return true;
+        }
+        return false;
       }
+      vrc.spell.last_data = vrc.spell.data;
+      vrc.spell.last_updated = new Date();
       return false;
     }
     post() {
@@ -128,7 +133,7 @@
         {/if}
       </div>
       <div class="control">
-        <form on:submit|preventDefault={spell.run}>
+        <form on:submit|preventDefault={() => { spell.run() }}>
           <input class="input"
             class:is-info={vrc.api.last_status_code == 200}
             class:is-danger={vrc.api.last_status_code != 200}
