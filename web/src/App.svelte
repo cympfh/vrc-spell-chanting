@@ -6,6 +6,7 @@
 
   // binding view
   let text = "";
+  let chatting = false;
 
   let vrc = {
     status: "Not Ready",  // "Ready", "Listening", "Inputting"
@@ -24,11 +25,12 @@
         body: JSON.stringify({"text": data})
       }).then(res => res.json()).then(res => {
         vrc.last_status_code = res.status;
-        if (vrc.last_status_code == 200) {
+        if (vrc.last_status_code == 100) {
           vrc.result = `OK: ${res.spell}`;
         } else {
           vrc.result = `Failed: ${data}`;
         }
+        chatting = res.chatting;
       });
     }
   }
@@ -62,7 +64,14 @@
       (new API()).post(data);
       setTimeout(() => {
         this.clear();
-      }, 500);
+      }, 100);
+    }
+    set_chat(is_chatting) {
+      if (is_chatting) {
+        this.post('start to chat');
+      } else {
+        this.post('end to chat');
+      }
     }
   }
 
@@ -81,7 +90,7 @@
         console.log('[Recog] error:', err);
         setTimeout(() => {
           this.start();
-        }, 200);
+        }, 100);
       };
       recognition.onend = () => {
         console.log('[Recog] end');
@@ -108,7 +117,7 @@
       setTimeout(() => {
         this.recognition.start();
         this.listening = true;
-      }, 200);
+      }, 100);
     }
     stop() {
       if (!this.ready) return;
@@ -116,6 +125,12 @@
       this.recognition.stop();
       this.listening = false;
     }
+  }
+
+  function check_chatting() {
+    setTimeout(() => {
+      spell.set_chat(chatting);
+    }, 100);
   }
 
   let spell = new Spell();
@@ -154,7 +169,7 @@
           spell.post(text);
           setTimeout(() => {
             recog.start();
-          }, 200);
+          }, 100);
         }
       } else {
         spell.inputting = true;
@@ -203,6 +218,16 @@
           />
         </form>
       </div>
+    </div>
+    <div>
+      <label>
+        <input
+          type=checkbox
+          bind:checked={chatting}
+          on:change={check_chatting}
+          />
+        chat mode
+      </label>
     </div>
   </div>
 </div>

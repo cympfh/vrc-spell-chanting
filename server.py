@@ -1,12 +1,12 @@
 import logging
 import subprocess
 import tomllib
+from dataclasses import dataclass
 
 from fastapi import FastAPI
 from Levenshtein import distance
 from pydantic import BaseModel
 from pythonosc import udp_client
-
 from util.mount import MountFiles
 from util.translate import Translate
 
@@ -95,6 +95,14 @@ class OSC:
 client = OSC(config)
 
 
+@dataclass
+class SpellResponse:
+    status: int
+    spell: str = ""
+    chatting: bool = False
+    error: str = ""
+
+
 @app.post("/api/spell")
 async def post_spell(spell: Spell):
     """Run spell"""
@@ -105,23 +113,23 @@ async def post_spell(spell: Spell):
     if ok and client.chat_mode(cmd["dest"]):
         if client.chating:
             logger.info("Start to chat")
-            return {"status": 200, "spell": "[chat mode]"}
+            return SpellResponse(200, "[chat mode]", True)
         else:
             logger.info("End to chat")
-            return {"status": 200, "spell": "[spell mode]"}
+            return SpellResponse(200, "[spell mode]", False)
     elif client.chating:
         logger.info("Chat: %s", spell.text)
         client.chat(spell.text)
         client.chat_translate(spell.text)
-        return {"status": 200, "spell": "[chat mode]", "text": spell.text}
+        return SpellResponse(200, spell.text, True)
     elif ok:
         logger.info("Running Spell: %s with dist=%s", cmd, dist)
         client.send(cmd["dest"], cmd["args"])
-        return {"status": 200, "spell": cmd["spell"]}
+        return SpellResponse(200, cmd["spell"], False)
     else:
         logger.warn("Cannot found similar spells")
         logger.warn("Most similar one is: %s with dist=%s", cmd, dist)
-        return {"status": 404}
+        return SpellResponse(404, "", False, f"Not found")
 
 
 @app.get("/api/lang")
