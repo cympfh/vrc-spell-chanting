@@ -1,131 +1,187 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Icon from "svelte-awesome";
-  import { infoCircle, pencil, play, pause } from "svelte-awesome/icons";
+  import { infoCircle, pencil, play, pause, phone, check, times, bath } from "svelte-awesome/icons";
   import Footer from "./components/Footer.svelte";
 
-  let spell = "";
-  let last_spell = "";
-  let freezing = 0;
+  // binding view
+  let text = "";
+  let chatting = false;
+
   let vrc = {
-    status: "Not Ready",
+    status: "Not Ready",  // "Ready", "Listening", "Inputting"
     last_status_code: 200,
     result: "",
-    spelltable: [],
-    lang: "en-US",
   };
 
-  var SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
-  var recognition = new SpeechRecognition();
-  recognition.lang = vrc.lang;
-  recognition.interimResults = true;
-  // recognition.continuous = true;
+  class API {
+    post(data) {
+      console.log("POST", data);
+      fetch('/api/spell', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({"text": data})
+      }).then(res => res.json()).then(res => {
+        vrc.last_status_code = res.status;
+        if (vrc.last_status_code == 100) {
+          vrc.result = `OK: ${res.spell}`;
+        } else {
+          vrc.result = `Failed: ${data}`;
+        }
+        chatting = res.chatting;
+      });
+    }
+  }
+
+  class Spell {
+    constructor() {
+      this.last_data = "";
+      this.last_update = new Date();
+      this.inputting = false;
+      this.chating = false;
+      this.table = [];
+    }
+    clear() {
+      if (!text) {
+        return;
+      }
+      this.last_data = text;
+      text = "";
+      this.last_update = new Date();
+      this.inputting = false;
+      console.log('cleared', this.last_data, this.last_update);
+    }
+    post(data) {
+      console.log("Spell.post", data);
+      if (!data) {
+        return;
+      }
+      if (text !== data) {
+        text = data;  // update view
+      }
+      (new API()).post(data);
+      setTimeout(() => {
+        this.clear();
+      }, 100);
+    }
+    set_chat(is_chatting) {
+      if (is_chatting) {
+        this.post('start to chat');
+      } else {
+        this.post('end to chat');
+      }
+    }
+  }
+
+  class Recognition {
+    constructor(lang) {
+      let recognition = new webkitSpeechRecognition();
+      recognition.interimResults = true;
+      recognition.continuous = true;
+      if (lang) {
+        recognition.lang = vrc.lang;
+      }
+      recognition.onstart = () => {
+        console.log('[Recog] start');
+      };
+      recognition.onerror = (err) => {
+        console.log('[Recog] error:', err);
+        setTimeout(() => {
+          this.start();
+        }, 100);
+      };
+      recognition.onend = () => {
+        console.log('[Recog] end');
+      }
+      recognition.onresult = (event) => {
+        let transcript = event.results[0][0].transcript;
+        console.log('[Recog] result:', transcript);
+        if (transcript === "") return;
+        text = transcript;
+      };
+      this.recognition = recognition;
+      this.ready = false;
+      this.listening = false;
+    }
+    set_lang(lang) {
+      this.recognition.lang = lang;
+    }
+    start() {
+      if (!this.ready) return;
+      spell.clear();
+      if (this.listening) {
+        this.recognition.stop();
+      }
+      setTimeout(() => {
+        this.recognition.start();
+        this.listening = true;
+      }, 100);
+    }
+    stop() {
+      if (!this.ready) return;
+      if (!this.listening) return;
+      this.recognition.stop();
+      this.listening = false;
+    }
+  }
+
+  function check_chatting() {
+    setTimeout(() => {
+      spell.set_chat(chatting);
+    }, 100);
+  }
+
+  let spell = new Spell();
+  let recog = new Recognition('en-US');
 
   function init() {
     fetch('/api/spells').then(res => res.json()).then(data => {
-      vrc.spelltable = data;
+      spell.table = data;
     });
     fetch('/api/lang').then(res => res.json()).then(lang => {
-      vrc.lang = lang;
-      recognition.lang = lang;
+      recog.set_lang(lang);
+      recog.ready = true;
       vrc.status = "Ready";
     });
   }
 
-  function post_spell() {
-    if (spell === "") return;
-    console.log("POST", spell);
-    fetch('/api/spell', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({"text": spell})
-    }).then(res => res.json()).then(data => {
-      console.log(data);
-      vrc.last_status_code = data.status;
-      if (vrc.last_status_code == 200) {
-        vrc.result = `OK: ${data.spell}`;
-      } else {
-        vrc.result = `Failed: ${spell}`;
-      }
-    });
-    spell = "";
-  }
-
-  function click_spell(event) {
-    spell = event.target.innerText;
-    post_spell();
-  }
-
-  recognition.onsoundstart = () => {
-    console.log('[I] Listening...')
-  };
-  recognition.onnomatch = () => {
-    console.log('[I] NoMatch (try again)');
-    spell = "";
-    kick_recognition();
-  };
-  recognition.onerror = (err) => {
-    console.log('[I] Error', err);
-    spell = "";
-    kick_recognition();
-  };
-  recognition.onsoundend = () => {
-    console.log('[I] End');
-    post_spell();
-    kick_recognition();
-  };
-  recognition.onresult = (event) => {
-    let transcript = event.results[0][0].transcript;
-    if (transcript === "") return;
-    spell = transcript;
-    freezing = 0;
-    console.log("Recog:", spell);
-  };
-  function kick_recognition() {
-    console.log("kick_recognition");
-    freezing = 0;
-    try {
-      recognition.stop();
-    } catch(e) {
-    }
-    setTimeout(() => {
-      try {
-        recognition.start();
-      } catch(e) {}
-      vrc.status = "Now listening...";
-    }, 200);
-  }
-  function stop_recognition() {
-    console.log("stop_recognition");
-    freezing = 0;
-    try {
-      vrc.status = "Ready";
-      spell = "";
-      recognition.stop();
-    } catch(e) {}
-  }
-
-  function watch_spell() {
-    if (vrc.status !== "Now listening...") return;
-    if (spell === last_spell) {   // freeze?
-      freezing += 1;
+  function watch() {
+    // update status
+    if (!recog.ready) {
+      vrc.status = 'Not Ready';
+    } else if (spell.inputting) {
+      vrc.status = 'Inputting';
+    } else if (recog.listening) {
+      vrc.status = 'Listening';
     } else {
-      freezing = 0;
+      vrc.status = 'Ready';
     }
-    console.log("watch", spell, last_spell, freezing);
-    if (freezing >= 10) {
-      spell == "";
-      stop_recognition();
-      setTimeout(kick_recognition, 10);
+    console.log(vrc.status);
+    // text frozen?
+    let elapsed = (new Date()) - spell.last_update;
+    if (recog.ready && recog.listening) {
+      if (text === "") {
+        spell.clear();
+      } else if (text === spell.last_data) {
+        if (elapsed > 1000) {  // frozen
+          spell.post(text);
+          setTimeout(() => {
+            recog.start();
+          }, 100);
+        }
+      } else {
+        spell.inputting = true;
+        spell.last_data = text;
+        spell.last_update = new Date();
+      }
     }
-    last_spell = spell;
   }
 
   onMount(() => {
     init();
-    setInterval(watch_spell, 1000);
+    setInterval(watch, 250);
   });
 </script>
 
@@ -142,23 +198,36 @@
           <Icon data={play} />
         </a>
         {:else if vrc.status == "Ready"}
-        <a class="button is-info" on:click={kick_recognition}>
+        <a class="button is-info" on:click={() => recog.start()}>
           <Icon data={play} />
         </a>
         {:else}
-        <a class="button is-info" on:click={stop_recognition}>
+        <a class="button is-info" on:click={() => recog.stop()}>
           <Icon data={pause} />
         </a>
         {/if}
       </div>
       <div class="control">
-        <form on:submit|preventDefault={post_spell}>
+        <form on:submit|preventDefault={() => spell.post(text)}>
           <input class="input"
             class:is-info={vrc.last_status_code == 200}
             class:is-danger={ vrc.last_status_code != 200 }
-            type="text" placeholder="Start to speech" bind:value={spell} />
+            type="text" placeholder="Start to speech"
+            bind:value={text}
+            on:keydown={() => recog.stop()}
+          />
         </form>
       </div>
+    </div>
+    <div>
+      <label>
+        <input
+          type=checkbox
+          bind:checked={chatting}
+          on:change={check_chatting}
+          />
+        chat mode
+      </label>
     </div>
   </div>
 </div>
@@ -169,32 +238,51 @@
       <div class="message-body">
 
         <div class="field">
+          <!-- Listening/Input Status -->
           <div>
-            <Icon data={pencil} />
-            { vrc.status }
+            {#if vrc.status == "Not Ready"}
+              <Icon data={times} />
+            {:else if vrc.status == "Ready"}
+              <Icon data={check} />
+            {:else if vrc.status == "Inputting"}
+              <Icon data={pencil} />
+            {:else if vrc.status == "Listening"}
+              <Icon data={phone} />
+            {/if}
+            {vrc.status}
           </div>
+          <!-- Last Spell -->
+          {#if spell.last_data}
+          <div>
+            <Icon data={bath} />
+            {spell.last_data}
+          </div>
+          {/if}
+          <!-- Last API Status -->
+          {#if vrc.result}
+          <div>
+            <Icon data={infoCircle} />
+            { vrc.result }
+          </div>
+          {/if}
         </div>
-
-        {#if vrc.result}
-        <div>
-          <Icon data={infoCircle} />
-          { vrc.result }
-        </div>
-        {/if}
 
       </div>
     </article>
   </div>
 </div>
 
-{#if vrc.spelltable}
+{#if spell.table}
 <div class="section">
   <div class="container">
     <h2 class="subtitle">Spells</h2>
     <div class="content">
       <ul>
-      {#each vrc.spelltable as s}
-        <li><kbd><a on:click={click_spell}>{s.spell}</a></kbd> <code>({s.dest}, {s.args})</code></li>
+      {#each spell.table as s}
+        <li>
+          <kbd><a on:click={ (event) => { spell.post(event.target.innerText) } }>{s.spell}</a></kbd>
+          <code>({s.dest}, {s.args})</code>
+        </li>
       {/each}
       </ul>
     </div>

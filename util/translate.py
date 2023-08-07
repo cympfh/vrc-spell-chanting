@@ -16,15 +16,13 @@ class Translate:
         }
         self.langs = langs
 
-    def run(self, query: str, return_original=True) -> Iterator[str]:
+    def run(self, query: str) -> Iterator[str]:
         """翻訳する
 
         Parameters
         ----------
         query
             翻訳する文章
-        return_original
-            最後に元の query も返すかどうか
         """
         for lang in self.langs:
             data = {
@@ -39,6 +37,3 @@ class Translate:
                 .rstrip(".。,、")
             )
             yield result
-
-        if return_original:
-            yield query

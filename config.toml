@@ -1,7 +1,7 @@
 [spell]
 lang = "ja-JP"  # "en-US" for English, "ja-JP" for Japanese
 translate = true  # true or false, enable to translate
-translate_langs = ["en", "zh", "ko"]  # to these langs
+translate_langs = ["en", "zh", "ja"]  # to these langs
 
 threshold = 0.3  # acceptable error-rate for speech recognition
 commands = [
@@ -15,6 +15,9 @@ commands = [
   # Avatar Parameters (Sample)
   {spell = "Dress A", dest = "/avatar/parameters/dress", args=[0]},
   {spell = "Dress B", dest = "/avatar/parameters/dress", args=[1]},
+
+  # if you are cympfh
+  {spell = "cympfh", dest = "/avatar/parameters/VRCFaceBlendK", args=[31]},
 ]
 
 [vrchat]
@@ -23,4 +26,4 @@ recv_port = 9001
 
 # hostname or IP of the machine running VRChat
 # If you are on WSL2 (not docker) and VRChat running on Windows host, you can use "$WIN"
-host = "192.168.10.10"
+host = "$WIN"
